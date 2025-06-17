@@ -53,7 +53,12 @@ def _fetch_current_user() -> User:
     )
 
 
-@app.get("/users/current", response_model=User, summary="Get current authenticated user")
+@app.get(
+    "/users/current",
+    response_model=User,
+    summary="Get current authenticated user",
+    include_in_schema=False,
+)
 def get_current_user():
     return _fetch_current_user()
 

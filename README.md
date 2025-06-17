@@ -2,7 +2,7 @@
 # jama-openapi-tool
 
 **Minimal FastAPI proxy for Jama Connect**  
-Expose a `/users/current` endpoint (aliased at `/me`) to fetch the current user’s info via OAuth2 Client Credentials.
+Expose a `/me` endpoint to fetch the current user’s info via OAuth2 Client Credentials. The legacy `/users/current` route still works but is hidden from the public docs.
 Designed for incremental expansion—add more Jama routes as you go.
 
 ---
@@ -11,7 +11,7 @@ Designed for incremental expansion—add more Jama routes as you go.
 
 - 🔒 OAuth2 Client Credentials (Client ID + Client Secret)  
 - 📦 `.env` support via `python-dotenv`  
-- ⚡ `/users/current` endpoint (with `/me` alias) to get authenticated user profile
+- ⚡ `/me` endpoint for the authenticated user (legacy `/users/current` hidden)
 - 🌐 CORS enabled for GET
 - 🖥 Simple CLI for launching the server
 
@@ -78,15 +78,15 @@ jama-openapi-tool --port 8000
 ```
 
 - Open `http://localhost:8000/docs` for interactive Swagger UI
-- Call `GET /me` (or `/users/current`) to fetch your own user profile
+- Call `GET /me` to fetch your own user profile (the `/users/current` alias is hidden from docs)
 
 ---
 
 ## Endpoint
 
-### GET /users/current (alias: `/me`)
+### GET /me (alias: `/users/current`)
 
-Fetch current user’s information from Jama.
+Fetch current user’s information from Jama. The `/users/current` path is still available but excluded from the OpenAPI schema.
 
 **Response** (200):
 
@@ -146,7 +146,12 @@ class User(BaseModel):
     lastName: str
     email: str
 
-@app.get("/users/current", response_model=User, summary="Get current authenticated user")
+@app.get(
+    "/users/current",
+    response_model=User,
+    summary="Get current authenticated user",
+    include_in_schema=False,
+)
 @app.get("/me", response_model=User, summary="Get current authenticated user")
 def get_current_user():
     try:
