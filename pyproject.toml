@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jama-openapi-tool"
+version = "0.1.0"
+description = "Minimal FastAPI proxy for Jama Connect"
+authors = [{name = "Henri Wenlin", email = "henri.wenlin@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "py-jama-rest-client",
+    "python-dotenv",
+]
+
+[project.urls]
+Homepage = "https://github.com/Wenlin-AI/jama-openapi-tool"
+
+[project.scripts]
+jama-openapi-tool = "jama_openapi_tool.__main__:main"

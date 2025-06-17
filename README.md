@@ -2,7 +2,7 @@
 # jama-openapi-tool
 
 **Minimal FastAPI proxy for Jama Connect**  
-Expose a single `/me` endpoint to fetch the current user’s info via OAuth2 Client Credentials.  
+Expose a `/users/current` endpoint (aliased at `/me`) to fetch the current user’s info via OAuth2 Client Credentials.
 Designed for incremental expansion—add more Jama routes as you go.
 
 ---
@@ -11,8 +11,9 @@ Designed for incremental expansion—add more Jama routes as you go.
 
 - 🔒 OAuth2 Client Credentials (Client ID + Client Secret)  
 - 📦 `.env` support via `python-dotenv`  
-- ⚡ Single `/me` endpoint to get authenticated user profile  
-- 🌐 CORS enabled for GET  
+- ⚡ `/users/current` endpoint (with `/me` alias) to get authenticated user profile
+- 🌐 CORS enabled for GET
+- 🖥 Simple CLI for launching the server
 
 ---
 
@@ -26,9 +27,17 @@ Designed for incremental expansion—add more Jama routes as you go.
 
 ## Installation
 
-1. Clone the repo  
+Install directly from GitHub:
+```bash
+pip install git+https://github.com/Wenlin-AI/jama-openapi-tool.git
+```
+
+Or clone and install locally:
+
+
+1. Clone the repo
    ```bash
-   git clone https://github.com/your-org/jama-openapi-tool.git
+   git clone https://github.com/Wenlin-AI/jama-openapi-tool.git
    cd jama-openapi-tool
    ```
 
@@ -40,7 +49,7 @@ Designed for incremental expansion—add more Jama routes as you go.
 
 3. Install dependencies  
    ```bash
-   pip install fastapi uvicorn py-jama-rest-client python-dotenv
+   pip install -e .
    ```
 
 ---
@@ -62,20 +71,20 @@ JAMA_CLIENT_SECRET=your_client_secret
 
 ## Running
 
-Start the FastAPI app with Uvicorn:
+Start the FastAPI app using the bundled CLI:
 
 ```bash
-uvicorn app:app --reload --port 8000
+jama-openapi-tool --port 8000
 ```
 
-- Open `http://localhost:8000/docs` for interactive Swagger UI  
-- Call `GET /me` to fetch your own user profile  
+- Open `http://localhost:8000/docs` for interactive Swagger UI
+- Call `GET /me` (or `/users/current`) to fetch your own user profile
 
 ---
 
 ## Endpoint
 
-### GET /me
+### GET /users/current (alias: `/me`)
 
 Fetch current user’s information from Jama.
 
@@ -137,6 +146,7 @@ class User(BaseModel):
     lastName: str
     email: str
 
+@app.get("/users/current", response_model=User, summary="Get current authenticated user")
 @app.get("/me", response_model=User, summary="Get current authenticated user")
 def get_current_user():
     try:
