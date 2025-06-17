@@ -163,3 +163,6 @@ def get_current_user():
 - Dockerize & deploy  
 
 Feel free to fork and expand!
+
+## Project Documentation
+Additional guides and notes live in the [`docs/`](docs/) directory.
